@@ -980,8 +980,8 @@ dependencies = [
 
 [[package]]
 name = "gomoku_lib"
-version = "5.0.0"
-source = "git+https://github.com/Maneren/gomoku-rust?branch=master#b009cb425fc3bda9cd30386be73fa82d85e72035"
+version = "6.0.0"
+source = "git+https://github.com/Maneren/gomoku-rust?branch=master#d3b837b06da3b2acbae79b3e2b7118a595b64280"
 dependencies = [
  "once_cell",
  "rayon",

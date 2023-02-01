@@ -39,7 +39,6 @@ export const Game = () => {
       timeLimit: 5000,
       board: fen,
       player: currentPlayer,
-      threads: 12,
     })) as {
       tile: { x: number; y: number };
     };

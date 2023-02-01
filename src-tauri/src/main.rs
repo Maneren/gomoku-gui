@@ -55,12 +55,12 @@ impl MoveWrapper {
 }
 
 #[tauri::command]
-fn calculate(board: String, player: PlayerWrapper, time_limit: u64, threads: usize) -> MoveWrapper {
+fn calculate(board: String, player: PlayerWrapper, time_limit: u64) -> MoveWrapper {
     let mut board = Board::from_string(&board).expect("Invalid board");
 
     println!("{board}");
 
-    let Move { tile, score } = gomoku_lib::decide(&mut board, player.unwrap(), time_limit, threads)
+    let Move { tile, score } = gomoku_lib::decide(&mut board, player.unwrap(), time_limit)
         .expect("Error deciding")
         .0;
 
