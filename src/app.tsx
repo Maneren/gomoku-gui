@@ -1,7 +1,5 @@
-import styles from './app.module.css';
+import { Game } from "./components/Game.jsx";
 
 export function App() {
-    return (
-        <div className="container" />
-    );
+  return <Game />;
 }
