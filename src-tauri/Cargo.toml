@@ -1,21 +1,22 @@
 [package]
 name = "gomoku-gui"
-version = "0.0.0"
+version = "0.1.0"
 description = "A Tauri App"
-authors = ["you"]
+authors = ["Maneren"]
 license = ""
 repository = ""
 edition = "2021"
-rust-version = "1.57"
 
 [build-dependencies]
-tauri-build = { version = "1.0.0", features = [] }
+tauri-build = { version = "1.2.1", features = [] }
 
 [dependencies]
-serde_json = "1.0"
-serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "1.0.0", features = ["api-all"] }
+serde_json = "1.0.91"
+serde = { version = "1.0.152", features = ["derive"] }
+tauri = { version = "1.2.4", features = ["api-all"] }
+
+gomoku_lib = { git = "https://github.com/Maneren/gomoku-rust", branch = "master" }
 
 [features]
-default = [ "custom-protocol" ]
-custom-protocol = [ "tauri/custom-protocol" ]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
