@@ -72,4 +72,6 @@ fn main() {
         .invoke_handler(tauri::generate_handler![calculate])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
+
+    let _ = gomoku_lib::set_thread_count(6);
 }
