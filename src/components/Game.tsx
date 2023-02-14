@@ -11,48 +11,76 @@ const cls = classListBuilder(styles);
 const nextPlayer = (current: Player) =>
   current === Player.X ? Player.O : Player.X;
 
+type Move = { tile: { x: number; y: number }; score: number };
+type Tile = [number, number];
+
 export const Game = () => {
   const [board, setBoard] = useState(generateBoard(15));
   const [currentPlayer, setCurrentPlayer] = useState(Player.X);
-  const [moves, setMoves] = useState([] as [number, number][]);
+  const [moves, setMoves] = useState([] as Tile[]);
   const [loading, setLoading] = useState(false);
 
-  const onTileClick = ([x, y]: [number, number]) => {
-    if (board[y][x] === null) {
-      const newBoard = cloneBoard(board);
-      newBoard[y][x] = currentPlayer;
+  const onTileClick = ([x, y]: Tile) => {
+    if (board[y][x] !== null) return;
+    const newBoard = cloneBoard(board);
+    newBoard[y][x] = currentPlayer;
 
-      setBoard(newBoard);
-      setCurrentPlayer(nextPlayer);
-      setMoves([...moves, [x, y]]);
-    }
+    setBoard(newBoard);
+    setCurrentPlayer(nextPlayer);
+    setMoves([...moves, [x, y]]);
   };
 
-  const calculate = async () => {
+  const calculate = () => {
     setLoading(true);
     const fen = boardToString(board);
     console.log(fen);
 
-    const {
-      tile: { x, y },
-    } = (await invoke("calculate", {
+    invoke<Move>("calculate", {
       timeLimit: 5000,
       board: fen,
       player: currentPlayer,
-    })) as {
-      tile: { x: number; y: number };
-    };
+    }).then(({ tile: { x, y } }) => {
+      onTileClick([x, y]);
+      setLoading(false);
+    });
+  };
 
-    onTileClick([x, y]);
+  const undo = () => {
+    if (moves.length === 0) return;
 
-    setLoading(false);
+    let movesIter = iter(moves);
+    let newMoves = movesIter.take(moves.length - 1).collect();
+
+    let [x, y] = movesIter.next().value ?? [0, 0];
+
+    const newBoard = cloneBoard(board);
+    newBoard[y][x] = null;
+
+    setBoard(newBoard);
+    setCurrentPlayer(nextPlayer);
+    setMoves(newMoves);
   };
 
   return (
     <div className={cls("game")}>
       <h1>Gomoku</h1>
-      <button onClick={calculate}>Calculate</button>
+      <div className={cls("buttons")}>
+        <button onClick={calculate}>Calculate</button>
+        <button onClick={undo}>Undo</button>
+      </div>
+      <div>
+        <label for="time-limit">Engine time limit: </label>
+        <input
+          id="time-limit"
+          type="number"
+          value={5000}
+          placeholder="Time limit"
+          width="100px"
+        />
+      </div>
       <Board board={board} onTileClick={loading ? () => null : onTileClick} />
+
+      {/* loading && <div className={cls("loading")}>Loading...</div> */}
     </div>
   );
 };
